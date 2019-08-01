@@ -19,7 +19,22 @@
  - application port : 8001
  - embedded redis port : 6379
  - db port id/pwd : 3306, smluv82/1234qwer!@
-
+ 
+4. 어플리케이션 구조
+ - EcologyApp : spring boot main
+ - /app/ecology : 생태정보코드, 생태정보프로그램의 controller,service, repository
+ - /app/user : 계정생성, 인증, 토큰 refresh의 controller, service, repository
+ - /common/component : jwt (토큰), 계정 패스워드 암호화
+ - /common/handler : url /ecology/**, /user/refresh의 interceptor
+ - /common/listener : application 구동(start), 정지(stop) 이벤트 리스너
+ - /common/util : csv 업로드 내용 파싱을 위한 util
+ - /config : jasypt, 인터셉터 설정 config
+ - /config/database : hikariCP로 별개로 설정하기 위해 만들었는데 현재는 사용안함 autoconfiguration
+ - /config/redis : embedded-redis, redis template config
+ - /vo/ecology : (1) Entity - EcologyCode, EcologyProgram  (2) Param(input)-EcologyParam (3) Result(Output)-EcologyResult, EcologyResultDetail
+ - /vo/ecology/validation : 각 API 별 필수 값 체크를 위한 validation interface
+ - /vo/user : (1) Entity - User (2)Param(input) - UserParam
+ 
 4. api 명세
   - CSV 업로드 [POST]
     + url : http://localhost:8001/ecology/csv/add
