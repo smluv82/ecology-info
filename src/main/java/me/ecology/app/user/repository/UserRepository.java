@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import me.ecology.vo.user.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByUserId(String userId);
 
 	Optional<User> findByUserId(@Param("userId") String userId);

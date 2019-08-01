@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ecology.app.ecology.service.EcologyService;
 import me.ecology.common.util.CsvUtil;
-import me.ecology.vo.ecology.EcologyGroup;
+import me.ecology.vo.ecology.EcologyParam;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class EcologyCsvController {
 	private final EcologyService ecologyService;
 
 	@PostMapping(value="/add")
-	public ResponseEntity<EcologyGroup> csvAdd(@RequestParam("csvFile") MultipartFile csvFile) throws Exception {
+	public ResponseEntity<EcologyParam> csvAdd(@RequestParam("csvFile") MultipartFile csvFile) throws Exception {
 		log.info("csvInfo restCall");
 
 		if(csvFile.isEmpty())

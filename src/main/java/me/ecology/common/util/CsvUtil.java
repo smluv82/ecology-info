@@ -14,12 +14,12 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
 import lombok.extern.slf4j.Slf4j;
-import me.ecology.vo.ecology.EcologyGroup;
+import me.ecology.vo.ecology.EcologyParam;
 
 @Slf4j
 public class CsvUtil {
-	public static List<EcologyGroup> readAll(final MultipartFile csvFile) throws Exception {
-		List<EcologyGroup> list = Lists.newArrayList();
+	public static List<EcologyParam> readAll(final MultipartFile csvFile) throws Exception {
+		List<EcologyParam> list = Lists.newArrayList();
 
 		try (
 				Reader reader = getReader(csvFile);
@@ -31,7 +31,7 @@ public class CsvUtil {
 			String[] strArr;
 
 			while ((strArr = csvReader.readNext()) != null) {
-				EcologyGroup ecologyGroup = new EcologyGroup();
+				EcologyParam ecologyGroup = new EcologyParam();
 				//TODO 레디스로 변경 필요 할 듯
 				ecologyGroup.setProgramId(String.join(StringUtils.EMPTY, "prgm", String.format("%04d", Integer.parseInt(strArr[0]))));
 				ecologyGroup.setProgramName(strArr[1]);

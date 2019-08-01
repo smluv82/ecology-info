@@ -69,28 +69,35 @@ public class UserService {
 		if(!userPwdHashComponent.verifyArgon2Hash(srcUser.getUserPwd(), userParam.getUserPwd()))
 			throw new Exception("id or pwd is wrong.");
 
-		return getTokenData(userParam.getUserId());
+		return getToken(userParam.getUserId());
 	}
 
 	/**
-	 * jwt refresh
+	 * jwt 토큰 refresh
 	 *
 	 * @param userId
 	 * @return
 	 * @throws Exception
 	 */
 	public User refresh(final String userId) throws Exception {
-		return getTokenData(userId);
+		return getToken(userId);
 	}
 
-	private User getTokenData(final String userId) throws Exception {
+	/**
+	 * jwt 토큰 생성 및 redis에 userId를 키로 저장
+	 * 유효시간은 jwt.expire 설정값을 따름.
+	 *
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	private User getToken(final String userId) throws Exception {
 		//jwt token 생성
 		final String token = jwtComponent.makeJwt(userId);
 
 		//redis에 데이터 추가
 		redisTemplate.opsForValue().set(userId, token, env.getProperty("jwt.expire", long.class), TimeUnit.MINUTES);
 
-//		User resultUser = User.builder().token(token).build();
 		User resultUser = new User();
 		resultUser.setToken(token);
 

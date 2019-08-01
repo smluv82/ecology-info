@@ -18,8 +18,6 @@ import me.ecology.vo.ecology.EcologyCode;
 @RequiredArgsConstructor
 @Service
 public class EcologyCodeService {
-//	private static int test = 0;
-
 	private final EcologyCodeRepository ecologyCodeRepository;
 
 	public String getRegionCode(final String regionName) {
@@ -30,10 +28,8 @@ public class EcologyCodeService {
 			do {
 				//TODO redis로 값 세팅 변경 필요!!!
 				String regCode = String.join(StringUtils.EMPTY, "reg", RandomStringUtils.randomNumeric(4));
-//				String regCode = String.join(StringUtils.EMPTY, "reg", String.format("%04d", test));
 				if(!ecologyCodeRepository.existsById(regCode)) {
 					resultCode = regCode;
-//					test++;
 					break;
 				}
 			}while(true);

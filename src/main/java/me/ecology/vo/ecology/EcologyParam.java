@@ -18,10 +18,9 @@ import me.ecology.vo.ecology.validation.EcologyWeightValidation;
 @JsonInclude(Include.NON_NULL)
 @Data
 @NoArgsConstructor
-public class EcologyGroup implements Serializable {
+public class EcologyParam implements Serializable {
 	private static final long serialVersionUID = 5844859120054586661L;
 
-//	@NotEmpty(groups = {EcologyUpdateValidation.class})
 	private String regionId;
 	@NotEmpty(groups = {EcologyCreateValidation.class, EcologyUpdateValidation.class, EcologyWeightValidation.class})
 	private String regionName;
@@ -39,7 +38,7 @@ public class EcologyGroup implements Serializable {
 	private String keyword;
 
 	@Builder
-	public EcologyGroup(long saveCnt) {
+	public EcologyParam(long saveCnt) {
 		this.saveCnt = saveCnt;
 	}
 }

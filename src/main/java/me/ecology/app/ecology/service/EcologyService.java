@@ -18,7 +18,7 @@ import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ecology.vo.ecology.EcologyCode;
-import me.ecology.vo.ecology.EcologyGroup;
+import me.ecology.vo.ecology.EcologyParam;
 import me.ecology.vo.ecology.EcologyProgram;
 import me.ecology.vo.ecology.EcologyResult;
 import me.ecology.vo.ecology.EcologyResultDetail;
@@ -32,68 +32,19 @@ public class EcologyService {
 	private final EcologyProgramService ecologyProgramService;
 
 	/**
-	 * @param ecologyList
+	 * csv 파일을 통한 업로드
+	 *
+	 * @param ecologyParamList
 	 * @return
 	 * @throws Exception
 	 */
 //	@Transactional(propagation=Propagation.REQUIRED)
-	public EcologyGroup saveCsv(final List<EcologyGroup> ecologyList) throws Exception {
+	public EcologyParam saveCsv(final List<EcologyParam> ecologyParamList) throws Exception {
 		log.info("saveCsv service");
-
-//		for(EcologyGroup e : ecologyList) {
-//			log.info("e : {}", e);
-//		}
-
-//		List<EcologyCode> codeList = ecologyList.parallelStream().map(x-> {
-//			EcologyCode ecologyCode = new EcologyCode();
-//
-//			String codeId = ecologyCodeService.getRegionCode(x.getRegionName());
-//
-//			if(Strings.isNullOrEmpty(codeId))
-//				return ecologyCode;
-//
-//			ecologyCode.setRegionId(codeId);
-//			ecologyCode.setRegionName(x.getRegionName());
-//			ecologyCodeService.save(ecologyCode);
-//
-//			return ecologyCode;
-//		})
-//		.peek(x-> log.info("peek x : {}", x))
-//		.filter(x-> Objects.nonNull(x.getRegionId()))
-//		.collect(Collectors.toList());
-
-//		ecologyList.parallelStream().forEach(x-> {
-
-
-//		List<EcologyProgram> ecoPrgmList = ecologyList.stream()
-//				.filter(Objects::nonNull)
-//				.peek(x-> log.info("before insert data[{}]", x))
-//				.map(x-> {
-//					EcologyCode ecologyCode = new EcologyCode();
-//
-//					String codeId = ecologyCodeService.getRegionCode(x.getRegionName());
-//
-//					if(!Strings.isNullOrEmpty(codeId)) {
-//						try {
-//							ecologyCode.setRegionId(codeId);
-//							ecologyCode.setRegionName(x.getRegionName());
-//							ecologyCode = ecologyCodeService.save(ecologyCode);
-//						}catch(Exception e) {
-//							log.error("SQLException : ", e);
-//						}
-//					}
-//
-//					EcologyProgram ecologyProgram = new EcologyProgram();
-//					BeanUtils.copyProperties(x, ecologyProgram);
-//					ecologyProgram.setEcologyCode(ecologyCode);
-//					return ecologyProgram;
-//				})
-//				.peek(x -> log.info("ecologyProgram[{}]", x))
-//				.collect(Collectors.toList());
 
 		long beforeCnt = ecologyProgramService.count();
 
-		ecologyList.stream()
+		ecologyParamList.stream()
 				.filter(Objects::nonNull)
 				.peek(x-> log.info("before insert data[{}]", x))
 				.forEach(x-> {
@@ -125,10 +76,12 @@ public class EcologyService {
 
 		long saveCnt = ecologyProgramService.count() - beforeCnt;
 
-		return EcologyGroup.builder().saveCnt(saveCnt).build();
+		return EcologyParam.builder().saveCnt(saveCnt).build();
 	}
 
 	/**
+	 * 지역명을 통한 조회
+	 *
 	 * @param regionId
 	 * @return
 	 * @throws Exception
@@ -139,31 +92,39 @@ public class EcologyService {
 		return ecologyCodeService.findById(regionId).orElse(new EcologyCode());
 	}
 
-	public EcologyProgram create(final EcologyGroup ecologyGroup) throws Exception {
+	/**
+	 * 생태 관광정보 추가
+	 *
+	 * @param ecologyParam
+	 * @return
+	 * @throws Exception
+	 */
+	public EcologyProgram create(final EcologyParam ecologyParam) throws Exception {
 		//TODO 나중에 에러코드 정의할것
-		if(ecologyProgramService.existsByProgramName(ecologyGroup.getProgramName())) {
+		if(ecologyProgramService.existsByProgramName(ecologyParam.getProgramName())) {
 			log.info("already exist data");
 			return null;
 		}
 
 		EcologyCode ecologyCode = new EcologyCode();
-		String codeId = ecologyCodeService.getRegionCode(ecologyGroup.getRegionName());
+		String codeId = ecologyCodeService.getRegionCode(ecologyParam.getRegionName());
 
 		if(!Strings.isNullOrEmpty(codeId)) {
 			ecologyCode.setRegionId(codeId);
-			ecologyCode.setRegionName(ecologyGroup.getRegionName());
+			ecologyCode.setRegionName(ecologyParam.getRegionName());
 			ecologyCode = ecologyCodeService.save(ecologyCode);
 		} else {
-			ecologyCode = ecologyCodeService.findByRegionName(ecologyGroup.getRegionName()).get();
+			ecologyCode = ecologyCodeService.findByRegionName(ecologyParam.getRegionName()).get();
 		}
 
 		//ecologyProgram save
 		EcologyProgram ecologyProgram = new EcologyProgram();
-		BeanUtils.copyProperties(ecologyGroup, ecologyProgram);
+		BeanUtils.copyProperties(ecologyParam, ecologyProgram);
 
 		//TODO 나중에 시간되면 redis로 변경
 		List<EcologyProgram> srcPrgmList = ecologyProgramService.findFirstByOrderByIdDesc();
 		String programId = StringUtils.EMPTY;
+
 		if(srcPrgmList.isEmpty()) {
 			//데이터가 없음
 			programId = "prgm0000";
@@ -180,36 +141,50 @@ public class EcologyService {
 		return ecologyProgramService.save(ecologyProgram);
 	}
 
-	public EcologyProgram update(final EcologyGroup ecologyGroup) throws Exception {
-		log.info("update ecologyGroup[{}]", ecologyGroup);
+	/**
+	 * 생태 관광정보 수정
+	 *
+	 * @param ecologyParam
+	 * @return
+	 * @throws Exception
+	 */
+	public EcologyProgram update(final EcologyParam ecologyParam) throws Exception {
+		log.info("update ecologyParam[{}]", ecologyParam);
 		//TODO exception 변경 필요
-		EcologyProgram srcPrgm = ecologyProgramService.findById(ecologyGroup.getProgramId()).orElseThrow(() -> new Exception("not exist program"));
+		EcologyProgram srcPrgm = ecologyProgramService.findById(ecologyParam.getProgramId()).orElseThrow(() -> new Exception("not exist program"));
 
 		log.info("srcPrgm[{}]", srcPrgm);
 
-		if(!ecologyGroup.getRegionName().equals(srcPrgm.getEcologyCode().getRegionName())) {
+		if(!ecologyParam.getRegionName().equals(srcPrgm.getEcologyCode().getRegionName())) {
 			//서비스 명이 변경 됨
 			EcologyCode ecologyCode = new EcologyCode();
-			String codeId = ecologyCodeService.getRegionCode(ecologyGroup.getRegionName());
+			String codeId = ecologyCodeService.getRegionCode(ecologyParam.getRegionName());
 
 			if(!Strings.isNullOrEmpty(codeId)) {
 				ecologyCode.setRegionId(codeId);
-				ecologyCode.setRegionName(ecologyGroup.getRegionName());
+				ecologyCode.setRegionName(ecologyParam.getRegionName());
 				ecologyCode = ecologyCodeService.save(ecologyCode);
 			} else {
-				ecologyCode = ecologyCodeService.findByRegionName(ecologyGroup.getRegionName()).get();
+				ecologyCode = ecologyCodeService.findByRegionName(ecologyParam.getRegionName()).get();
 			}
 
 			srcPrgm.setEcologyCode(ecologyCode);
 		}
 
-		srcPrgm.setProgramInfo(Optional.ofNullable(ecologyGroup.getProgramInfo()).orElse(StringUtils.EMPTY));
-		srcPrgm.setProgramDetail(Optional.ofNullable(ecologyGroup.getProgramDetail()).orElse(StringUtils.EMPTY));
-		srcPrgm.setTheme(ecologyGroup.getTheme());
+		srcPrgm.setProgramInfo(Optional.ofNullable(ecologyParam.getProgramInfo()).orElse(StringUtils.EMPTY));
+		srcPrgm.setProgramDetail(Optional.ofNullable(ecologyParam.getProgramDetail()).orElse(StringUtils.EMPTY));
+		srcPrgm.setTheme(ecologyParam.getTheme());
 
 		return ecologyProgramService.save(srcPrgm);
 	}
 
+	/**
+	 * 특정 지역명으로 검색 및 결과 지역코드 및 프로그램명, 테마 조회
+	 *
+	 * @param regionName
+	 * @return
+	 * @throws Exception
+	 */
 	public EcologyCode searchForRegion(final String regionName) throws Exception {
 		//TODO exception 변경 필요
 		EcologyCode srcEcologyCode = ecologyCodeService.findByRegionName(regionName)
@@ -225,6 +200,13 @@ public class EcologyService {
 				.build();
 	}
 
+	/**
+	 *  프로그램 정보 키워드 카운트 검색
+	 *
+	 * @param keyword
+	 * @return
+	 * @throws Exception
+	 */
 	public EcologyResult searchForInfo(final String keyword) throws Exception {
 		log.info("searchForInfo service call");
 
@@ -257,6 +239,13 @@ public class EcologyService {
 				.build();
 	}
 
+	/**
+	 * 프로그램 상세 정보 키워드 카운트 조회
+	 *
+	 * @param keyword
+	 * @return
+	 * @throws Exception
+	 */
 	public EcologyResult searchForDetail(final String keyword) throws Exception {
 		log.info("searchForDetail service call");
 
@@ -270,11 +259,10 @@ public class EcologyService {
 		int count = 0;
 
 		for(EcologyProgram program : ecologyProgramList) {
-//			log.debug(program.getProgramDetail());
-			log.info("detail : {}", program.getProgramDetail());
+			log.debug("detail : {}", program.getProgramDetail());
 
 			int tmpCount = StringUtils.countMatches(program.getProgramDetail(), keyword);
-			log.info("tmpCount : {}", tmpCount);
+			log.debug("tmpCount : {}", tmpCount);
 			count = count + tmpCount;
 		}
 
@@ -284,21 +272,22 @@ public class EcologyService {
 //		return EcologyResult.builder().keyword(keyword).count(1L).build();
 	}
 
-	public EcologyResult searchForWeight(final EcologyGroup ecologyGroup) throws Exception {
+	public EcologyResult searchForWeight(final EcologyParam ecologyParam) throws Exception {
 		log.info("searchForWeight service call");
+
 		EcologyResult result = new EcologyResult();
 
-		final String keyword = ecologyGroup.getKeyword();
+		final String keyword = ecologyParam.getKeyword();
 		final int themeWeight = env.getProperty("ecology.weight.theme", int.class);
 		final int infoWeight = env.getProperty("ecology.weight.info", int.class);
 		final int detailWeight = env.getProperty("ecology.weight.detail", int.class);
 
 		log.info("themeWeight[{}] <> infoWeight[{}] <> detailWeight[{}]", themeWeight, infoWeight, detailWeight);
 
-		List<EcologyCode> codeList = ecologyCodeService.findQueryByRegionName(ecologyGroup.getRegionName());
+		List<EcologyCode> codeList = ecologyCodeService.findQueryByRegionName(ecologyParam.getRegionName());
 
 		for(EcologyCode code : codeList) {
-			System.out.println(code);
+			log.debug("for loop code[{}]", code);
 
 			List<EcologyProgram> prgmList = code.getEcologyPrograms();
 
@@ -309,7 +298,7 @@ public class EcologyService {
 					continue;
 				}
 
-				System.out.println(prgm);
+				log.debug("for loop prgm[{}]", prgm);
 
 				int themeAvg = StringUtils.countMatches(prgm.getTheme(), keyword) * themeWeight;
 				int infoAvg = StringUtils.countMatches(prgm.getProgramInfo(), keyword) * infoWeight;

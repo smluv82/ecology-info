@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.ecology</groupId>
 	<artifactId>ecology-info</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>ecology-info</name>
 	<packaging>jar</packaging>
 
@@ -191,12 +191,6 @@
 			<artifactId>jasypt-spring-boot-starter</artifactId>
 			<version>2.1.1</version>
 		</dependency>
-
-<!-- 		<dependency> -->
-<!-- 			<groupId>junit</groupId> -->
-<!-- 			<artifactId>junit</artifactId> -->
-<!-- 			<scope>test</scope> -->
-<!-- 		</dependency> -->
 	</dependencies>
 
 <!-- 	<profiles> -->
