@@ -12,8 +12,11 @@ spring:
    datasource:
       #url: jdbc:log4jdbc:mysql://127.0.0.1:3306/ecology?characterEncoding=UTF-8&serverTimezone=UTC
       url: jdbc:mysql://127.0.0.1:3306/ecology?characterEncoding=UTF-8&serverTimezone=UTC
-      username: smluv82
-      password: 1234qwer!@
+#      username: smluv82
+#      password: 1234qwer!@
+#      username: ENC[7Eu/Bm3+rBBJbCepxYoPrVMkOsd55L2x4yamYcYQwBY=]
+      username: ENC[7Eu/Bm3+rBBJbCepxYoPrVMkOsd55L2x4yamYcYQwBY=]
+      password: ENC[GeuSeTSfpLZCQ6HCsaSiAqltqkiwGEZ9faFBucbGpgKmIr0db+0WUQ==]
       #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
 #      driver-class-name: com.mysql.jdbc.Driver
       driver-class-name: com.mysql.jdbc.Driver
@@ -52,6 +55,14 @@ spring:
             max-wait: -1ms
             min-idle: 2
 
+#jwt(json web token config)
 jwt:
    secret-key: smtestjwt
    expire: 30
+   
+#jasypt config
+jasypt:
+   encryptor:
+      property:
+         prefix: "ENC["
+         suffix: "]"
