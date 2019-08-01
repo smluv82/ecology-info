@@ -35,14 +35,11 @@ public class EcologyCode implements Serializable {
 	@Column(name="region_id")
 	private String regionId;
 
-//	@NotEmpty
 	@Column(name="region_name", unique=true, nullable=false, length=200)
 	private String regionName;
 
-//	@OneToMany(cascade=CascadeType.ALL)
 	@JsonManagedReference
 	@OneToMany(mappedBy="ecologyCode")
-//	@JoinColumn(name="region_id")
 	private List<EcologyProgram> ecologyPrograms;
 
 	@Builder
