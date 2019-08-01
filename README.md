@@ -94,7 +94,25 @@
             
   
 5. 문제해결 전략
-  - 
+  - entity는 EcologyCode (지역 코드), EcologyProgram (프로그램 정보) 로 1:n으로 구성하였습니다.
+  - 처음에는 단방향으로 EcologyProgram에서 ManyToOne으로 하였는데 API 개발 진행 중(지역명을 통한 조회 개발 시) 양방향으로 변경하였습니다.
+  - lombok을 쓰다보니, 결과 조회에서 StackOverflowError가 발생하여,
+     EcologyCode.eclogyPrograms에 @JsonManagedReference 추가, EcologyProgram.eclogyCode에 @JsonBackReference 을 추가하여 해결하였습니다.
+  - 계정 관련해서 User entity를 추가하였고 jwt 생성 및 parsing은 jjwt open library을 사용하였습니다.
+  - jwt 유효시간(단위 : Minutes)은 application.yml의 jwt.expire를 설정하였습니다.
+  - jwt 생성 후 생성 된 토큰을 저장하기 위해서 redis를 사용하였고, embedded-redis open library를 사용하였습니다.
+  - 토큰 기반 인증 처리를 위해, WebMvcConfig에 API url 패턴 추가 ("/ecology/**", "/user/refresh")을 추가 후
+    ApiInterceptor를 추가하여 Header에 Authorization - Bearer token 체크 및 redis에 저장된 토큰이 일치하는 경우에만 pass하도록 하였습니다.
+  - maven의 profiles을 나눌까도 했었는데, 운영으로 따로 올릴 부분은 아니라서 생략하였습니다.
+  - 조회 API 관련해서 처음에는 @PostMapping으로 @RequestBody로 Json 데이터를 받게 개발하였는데, 조회를 Post로 하는건 아닌거 같아,
+    @GetMapping으로 변경 후 @ModelAttribute로 입력값이 binding되도록 변경하였습니다.
+  - API 필수 값 체크는 Ecology는 @Validation (각 API마다 필수값이 달라서), User는 @Valid을 사용하였습니다.
+  - application.yml 값의 DB ID/PWD, secret-key를 처음에는 평문으로 되어있었는데, 보안을 위해 jasypt open lib을 사용하였습니다.
+  - 프로그램 소개 키워드로 카운트 조회 API에서는 count을 위해, Map으로 변경 및 count 후 객체 형태로 변환 작업을 하였습니다.
+  - 프로그램 상세 정보 키워드 카운트 조회 API는 program list을 가져와 상세정보의 키워드와 일치하는 것을 count하였습니다.
+  - 프로그램 추천 API : 가중치를 application.yml의 ecology.weight으로 각각 설정 하고, 지역명과 일치하는 프로그램 리스트를 조회 후
+                       테마, 프로그램소개, 프로그램상세소개의 각각 키워드를 카운트 및 가중치를 더하여 제일 높은 점수가 나오도록 개발하였습니다.
+                       ex) (테마키워드카운트 * 테마가중치 + 소개카운트 * 소개가중치 + 상세소개카운트 * 상세소개가중치) / 가중치의 합
   
 6. 빌드 및 실행방법
   - 빌드 : mvn clean install -Dmaven.test.skip=true
