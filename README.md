@@ -1,4 +1,4 @@
-# EcologyInfo
+# ecology-info (생태 정보 서비스 API 개발)
 1. 개발 환경 및 개발 프레임워크
   - java 1.8
   - maven 3.6
