@@ -59,7 +59,6 @@ public class EcologyProgram implements Serializable {
 	@Column(name="updated_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime updatedAt;
 
-//	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JsonBackReference
 	@ManyToOne(targetEntity=EcologyCode.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name="region_id")
