@@ -72,6 +72,13 @@ public class UserService {
 		return getTokenData(userParam.getUserId());
 	}
 
+	/**
+	 * jwt refresh
+	 *
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	public User refresh(final String userId) throws Exception {
 		return getTokenData(userId);
 	}

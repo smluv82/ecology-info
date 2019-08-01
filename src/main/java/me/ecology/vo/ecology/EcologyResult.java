@@ -3,6 +3,7 @@ package me.ecology.vo.ecology;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -18,7 +19,11 @@ public class EcologyResult implements Serializable {
 
 	private String keyword;
 	private Integer count;
+	private String program;
 	private List<EcologyResultDetail> programs;
+
+	@JsonIgnore
+	private int weight;
 
 	@Builder
 	public EcologyResult(String keyword, List<EcologyResultDetail> programs) {

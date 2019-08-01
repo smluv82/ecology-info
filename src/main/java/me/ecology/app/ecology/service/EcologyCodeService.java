@@ -1,5 +1,6 @@
 package me.ecology.app.ecology.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -17,7 +18,7 @@ import me.ecology.vo.ecology.EcologyCode;
 @RequiredArgsConstructor
 @Service
 public class EcologyCodeService {
-	private static int test = 0;
+//	private static int test = 0;
 
 	private final EcologyCodeRepository ecologyCodeRepository;
 
@@ -32,7 +33,7 @@ public class EcologyCodeService {
 //				String regCode = String.join(StringUtils.EMPTY, "reg", String.format("%04d", test));
 				if(!ecologyCodeRepository.existsById(regCode)) {
 					resultCode = regCode;
-					test++;
+//					test++;
 					break;
 				}
 			}while(true);
@@ -50,7 +51,7 @@ public class EcologyCodeService {
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
-	public EcologyCode save(EcologyCode ecologyCode) throws Exception {
+	public EcologyCode save(final EcologyCode ecologyCode) throws Exception {
 		Optional<EcologyCode> srcEcologyCode = ecologyCodeRepository.findByRegionName(ecologyCode.getRegionName());
 
 		if(srcEcologyCode.isPresent())
@@ -59,5 +60,9 @@ public class EcologyCodeService {
 		log.info("save ecologyCode[{}]", ecologyCode);
 
 		return ecologyCodeRepository.save(ecologyCode);
+	}
+
+	public List<EcologyCode> findQueryByRegionName(final String regionName) throws Exception {
+		return ecologyCodeRepository.findQueryByRegionName(regionName);
 	}
 }

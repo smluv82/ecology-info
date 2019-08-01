@@ -14,7 +14,6 @@ spring:
       url: jdbc:mysql://127.0.0.1:3306/ecology?characterEncoding=UTF-8&serverTimezone=UTC
 #      username: smluv82
 #      password: 1234qwer!@
-#      username: ENC[7Eu/Bm3+rBBJbCepxYoPrVMkOsd55L2x4yamYcYQwBY=]
       username: ENC[7Eu/Bm3+rBBJbCepxYoPrVMkOsd55L2x4yamYcYQwBY=]
       password: ENC[GeuSeTSfpLZCQ6HCsaSiAqltqkiwGEZ9faFBucbGpgKmIr0db+0WUQ==]
       #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
@@ -57,7 +56,8 @@ spring:
 
 #jwt(json web token config)
 jwt:
-   secret-key: smtestjwt
+#   secret-key: smtestjwt
+   secret-key: ENC[o9DXdYzpzY3ijNdD8Y4BZ1KVJ/3lz0awJzXWbidaSaSwXvK8GfDRug==]
    expire: 30
    
 #jasypt config
@@ -66,3 +66,10 @@ jasypt:
       property:
          prefix: "ENC["
          suffix: "]"
+         
+#ecology weight
+ecology:
+   weight:
+      theme: 40
+      info: 35
+      detail: 25

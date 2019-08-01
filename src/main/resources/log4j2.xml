@@ -47,17 +47,17 @@
 	</Appenders>
 
 	<Loggers>
-		<logger name="jdbc.audit" level="OFF"/>
-		<logger name="jdbc.sqltiming" level="OFF"/>
-		<logger name="jdbc.connection" level="OFF"/>
-		<logger name="jdbc.resultset" level="OFF"/>
-		<logger name="jdbc.resultsettable" level="OFF"/>
+		<Logger name="jdbc.audit" level="OFF"/>
+		<Logger name="jdbc.sqltiming" level="OFF"/>
+		<Logger name="jdbc.connection" level="OFF"/>
+		<Logger name="jdbc.resultset" level="OFF"/>
+		<Logger name="jdbc.resultsettable" level="OFF"/>
 
-		<logger name="jdbc.sqlonly" level="INFO" additivity="false">
+		<Logger name="jdbc.sqlonly" level="INFO" additivity="false">
 			<AppenderRef ref="ERROR_FILE"/>
 			<AppenderRef ref="FILE"/>
 			<AppenderRef ref="STDOUT" />
-		</logger>
+		</Logger>
 
 		<Logger name="org.hibernate.SQL" level="debug" additivity="false">
 			<AppenderRef ref="STDOUT" />
@@ -66,11 +66,11 @@
 			<AppenderRef ref="STDOUT" />
 		</Logger>
 
-		<logger name="me.ecology" level="INFO" additivity="false">
+		<Logger name="me.ecology" level="INFO" additivity="false">
 			<AppenderRef ref="ERROR_FILE"/>
 			<AppenderRef ref="FILE"/>
 			<AppenderRef ref="STDOUT" />
-		</logger>
+		</Logger>
 
 		<Root level="INFO">
 			<AppenderRef ref="ERROR_FILE"/>

@@ -7,13 +7,13 @@ import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ecology.vo.ecology.validation.EcologyCreateValidation;
 import me.ecology.vo.ecology.validation.EcologyKeywordValidation;
 import me.ecology.vo.ecology.validation.EcologyUpdateValidation;
+import me.ecology.vo.ecology.validation.EcologyWeightValidation;
 
 @JsonInclude(Include.NON_NULL)
 @Data
@@ -23,7 +23,7 @@ public class EcologyGroup implements Serializable {
 
 //	@NotEmpty(groups = {EcologyUpdateValidation.class})
 	private String regionId;
-	@NotEmpty(groups = {EcologyCreateValidation.class, EcologyUpdateValidation.class})
+	@NotEmpty(groups = {EcologyCreateValidation.class, EcologyUpdateValidation.class, EcologyWeightValidation.class})
 	private String regionName;
 	@NotEmpty(groups = {EcologyUpdateValidation.class})
 	private String programId;
@@ -35,7 +35,7 @@ public class EcologyGroup implements Serializable {
 	private String programDetail;
 
 	private long saveCnt;
-	@NotEmpty(groups = {EcologyKeywordValidation.class})
+	@NotEmpty(groups = {EcologyKeywordValidation.class, EcologyWeightValidation.class})
 	private String keyword;
 
 	@Builder

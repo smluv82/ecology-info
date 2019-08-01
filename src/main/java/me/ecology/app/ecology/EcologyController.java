@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +27,7 @@ import me.ecology.vo.ecology.EcologyResult;
 import me.ecology.vo.ecology.validation.EcologyCreateValidation;
 import me.ecology.vo.ecology.validation.EcologyKeywordValidation;
 import me.ecology.vo.ecology.validation.EcologyUpdateValidation;
+import me.ecology.vo.ecology.validation.EcologyWeightValidation;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -92,8 +94,10 @@ public class EcologyController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("/ecology/region/search")
-	public ResponseEntity<EcologyCode> searchForRegion(@RequestBody final EcologyGroup ecologyGroup) throws Exception {
+//	@PostMapping("/ecology/region/search")
+//	public ResponseEntity<EcologyCode> searchForRegion(@RequestBody final EcologyGroup ecologyGroup) throws Exception {
+	@GetMapping("/ecology/region/search")
+	public ResponseEntity<EcologyCode> searchForRegion(@ModelAttribute final EcologyGroup ecologyGroup) throws Exception {
 		log.info("search for place");
 
 		if(Strings.isNullOrEmpty(ecologyGroup.getRegionName()))
@@ -109,17 +113,42 @@ public class EcologyController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("/ecology/info/search")
-	public ResponseEntity<EcologyResult> searchForInfo(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+//	@PostMapping("/ecology/info/search")
+//	public ResponseEntity<EcologyResult> searchForInfo(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+	@GetMapping("/ecology/info/search")
+	public ResponseEntity<EcologyResult> searchForInfo(@ModelAttribute @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
 		log.info("search program info for keyword");
 
 		return ResponseEntity.ok(ecologyService.searchForInfo(ecologyGroup.getKeyword()));
 	}
 
-	@PostMapping("/ecology/detail/search")
-	public ResponseEntity<EcologyResult> searchForDetail(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+	/**
+	 * 프로그램 상세 정보 키워드 카운트 조회
+	 *
+	 * @param ecologyGroup
+	 * @return
+	 * @throws Exception
+	 */
+//	@PostMapping("/ecology/detail/search")
+//	public ResponseEntity<EcologyResult> searchForDetail(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+	@GetMapping("/ecology/detail/search")
+	public ResponseEntity<EcologyResult> searchForDetail(@ModelAttribute @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
 		log.info("search program detail for keyword");
 
 		return ResponseEntity.ok(ecologyService.searchForDetail(ecologyGroup.getKeyword()));
+	}
+
+	/**
+	 * @param ecologyGroup
+	 * @return
+	 * @throws Exception
+	 */
+//	@PostMapping("/ecology/weight/search")
+//	public ResponseEntity<EcologyResult> searchForWeight(@RequestBody @Validated(EcologyWeightValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+	@GetMapping("/ecology/weight/search")
+	public ResponseEntity<EcologyResult> searchForWeight(@ModelAttribute @Validated(EcologyWeightValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+		log.info("search program weight for keyword");
+
+		return ResponseEntity.ok(ecologyService.searchForWeight(ecologyGroup));
 	}
 }

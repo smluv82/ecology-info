@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
@@ -26,6 +27,7 @@ import me.ecology.vo.ecology.EcologyResultDetail;
 @RequiredArgsConstructor
 @Service
 public class EcologyService {
+	private final Environment env;
 	private final EcologyCodeService ecologyCodeService;
 	private final EcologyProgramService ecologyProgramService;
 
@@ -280,5 +282,52 @@ public class EcologyService {
 
 		return new EcologyResult(keyword, count);
 //		return EcologyResult.builder().keyword(keyword).count(1L).build();
+	}
+
+	public EcologyResult searchForWeight(final EcologyGroup ecologyGroup) throws Exception {
+		log.info("searchForWeight service call");
+		EcologyResult result = new EcologyResult();
+
+		final String keyword = ecologyGroup.getKeyword();
+		final int themeWeight = env.getProperty("ecology.weight.theme", int.class);
+		final int infoWeight = env.getProperty("ecology.weight.info", int.class);
+		final int detailWeight = env.getProperty("ecology.weight.detail", int.class);
+
+		log.info("themeWeight[{}] <> infoWeight[{}] <> detailWeight[{}]", themeWeight, infoWeight, detailWeight);
+
+		List<EcologyCode> codeList = ecologyCodeService.findQueryByRegionName(ecologyGroup.getRegionName());
+
+		for(EcologyCode code : codeList) {
+			System.out.println(code);
+
+			List<EcologyProgram> prgmList = code.getEcologyPrograms();
+
+			for(EcologyProgram prgm : prgmList) {
+				//동일한 프로그램 인 경우 continue
+				if(Objects.equals(prgm.getProgramId(), result.getProgram())) {
+					log.info("prgm.getProgramId() : {} <> result.getProgram() : {}", prgm.getProgramId(), result.getProgram());
+					continue;
+				}
+
+				System.out.println(prgm);
+
+				int themeAvg = StringUtils.countMatches(prgm.getTheme(), keyword) * themeWeight;
+				int infoAvg = StringUtils.countMatches(prgm.getProgramInfo(), keyword) * infoWeight;
+				int detailAvg = StringUtils.countMatches(prgm.getProgramDetail(), keyword) * detailWeight;
+				int totalWeight = (themeAvg + infoAvg + detailAvg) / (themeWeight + infoWeight + detailWeight);
+
+				log.info("themeAvg[{}] <> infoAvg[{}] <> detailAvg[{}] <> totalWeight[{}]", themeAvg, infoAvg, detailAvg, totalWeight);
+
+				//가중치가 같은 경우에는??
+				if(result.getWeight() < totalWeight) {
+					log.info("change before result[{}]", result);
+					result.setProgram(prgm.getProgramId());
+					result.setWeight(totalWeight);
+				}
+			}
+		}
+
+		log.info("last result[{}]", result);
+		return result;
 	}
 }

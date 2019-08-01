@@ -26,5 +26,6 @@ public class JasyptTest {
 
 		System.out.println(jasyptStringEncryptor.encrypt("smluv82"));
 		System.out.println(jasyptStringEncryptor.encrypt("1234qwer!@"));
+		System.out.println(jasyptStringEncryptor.encrypt("smtestjwt"));
 	}
 }

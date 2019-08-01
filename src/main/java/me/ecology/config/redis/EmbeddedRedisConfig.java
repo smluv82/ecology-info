@@ -22,7 +22,13 @@ public class EmbeddedRedisConfig {
 	@PostConstruct
 	public void redisServer() throws IOException {
 		log.info("redisServer start");
-		this.redisServer = new RedisServer(env.getProperty("spring.redis.port", int.class, 6379));
+//		this.redisServer = new RedisServer(env.getProperty("spring.redis.port", int.class, 6379));
+
+		redisServer = RedisServer.builder()
+				.port(env.getProperty("spring.redis.port", int.class, 6379))
+				.setting("maxmemory 128M")
+				.build();
+
 		redisServer.start();
 	}
 
