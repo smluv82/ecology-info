@@ -41,6 +41,17 @@ spring:
             format_sql: true
             use_sql_comments: true
 
+   redis:
+      host: localhost
+      port: 6379
+      database: 0
+      lettuce:
+         pool:
+            max-active: 8
+            max-idle: 8
+            max-wait: -1ms
+            min-idle: 2
+
 jwt:
    secret-key: smtestjwt
    expire: 30

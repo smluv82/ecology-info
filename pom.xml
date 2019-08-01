@@ -47,10 +47,10 @@
 		</dependency>
 
 		<!-- redis -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-data-redis</artifactId> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 
 <!-- 		<dependency> -->
 <!-- 			<groupId>org.springframework.boot</groupId> -->
@@ -86,6 +86,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
@@ -96,20 +97,20 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<artifactId>jackson-annotations</artifactId> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<artifactId>jackson-databind</artifactId> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<artifactId>jackson-core</artifactId> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -162,17 +163,19 @@
 			<version>4.6</version>
 		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.commons</groupId> -->
-<!-- 			<artifactId>commons-csv</artifactId> -->
-<!-- 			<version>1.6</version> -->
-<!-- 		</dependency> -->
-
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/it.ozimov/embedded-redis -->
+		<dependency>
+			<groupId>it.ozimov</groupId>
+			<artifactId>embedded-redis</artifactId>
+			<version>0.7.2</version>
+<!-- 		    <scope>test</scope> -->
 		</dependency>
 
 		<dependency>
@@ -181,6 +184,33 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+<!-- 	<profiles> -->
+<!-- 		<profile> -->
+<!-- 			<id>local</id> -->
+<!-- 			<properties> -->
+<!-- 				<env>local</env> -->
+<!-- 			</properties> -->
+<!-- 		</profile> -->
+<!-- 		<profile> -->
+<!-- 			<id>dev</id> -->
+<!-- 			<properties> -->
+<!-- 				<env>dev</env> -->
+<!-- 			</properties> -->
+<!-- 		</profile> -->
+<!-- 		<profile> -->
+<!-- 			<id>stg</id> -->
+<!-- 			<properties> -->
+<!-- 				<env>stg</env> -->
+<!-- 			</properties> -->
+<!-- 		</profile> -->
+<!-- 		<profile> -->
+<!-- 			<id>prd</id> -->
+<!-- 			<properties> -->
+<!-- 				<env>prd</env> -->
+<!-- 			</properties> -->
+<!-- 		</profile> -->
+<!-- 	</profiles> -->
 
 	<build>
 		<plugins>
@@ -195,9 +225,9 @@
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>
-<!-- 				<includes> -->
-<!-- 					<include>**/*.xml</include> -->
-<!-- 				</includes> -->
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
 			</resource>
 			<resource>
 <!-- 				<directory>src/main/resources-${env}</directory> -->

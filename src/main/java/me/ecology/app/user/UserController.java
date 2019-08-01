@@ -4,9 +4,12 @@ import javax.validation.Valid;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.base.Strings;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,13 @@ public class UserController {
 		return userService.signup(userParam);
 	}
 
+	/**
+	 * 계정 인증
+	 *
+	 * @param userParam
+	 * @return
+	 * @throws Exception
+	 */
 	@PostMapping("/signin")
 	public User signin(@RequestBody @Valid final UserParam userParam) throws Exception {
 		log.info("signin");
@@ -42,8 +52,19 @@ public class UserController {
 		return userService.signin(userParam);
 	}
 
-//	@PostMapping("/refresh")
-//	public ResponseEntity<String> refresh() throws Exception {
-//		log.info("refresh");
-//	}
+	/**
+	 * jwt refresh
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/refresh")
+	public User refresh(@RequestAttribute final String userId) throws Exception {
+		log.info("refresh");
+
+		if(Strings.isNullOrEmpty(userId))
+			throw new Exception("refresh userId is null");
+
+		return userService.refresh(userId);
+	}
 }

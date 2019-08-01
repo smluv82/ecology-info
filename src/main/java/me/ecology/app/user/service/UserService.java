@@ -1,8 +1,11 @@
 package me.ecology.app.user.service;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,8 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final UserPwdHashComponent userPwdHashComponent;
 	private final JwtComponent jwtComponent;
+	@Qualifier("redisTemplate")
+	private final RedisTemplate<String, Object> redisTemplate;
 
 	/**
 	 * 계정 생성
@@ -64,17 +69,26 @@ public class UserService {
 		if(!userPwdHashComponent.verifyArgon2Hash(srcUser.getUserPwd(), userParam.getUserPwd()))
 			throw new Exception("id or pwd is wrong.");
 
-		//TODO redis에 있는지 확인 추가 할 것. redis에 있으면 expire time 늘려서 jwt 다시 세팅
+		return getTokenData(userParam.getUserId());
+	}
 
+	public User refresh(final String userId) throws Exception {
+		return getTokenData(userId);
+	}
+
+	private User getTokenData(final String userId) throws Exception {
 		//jwt token 생성
-		final String token = jwtComponent.makeJwt(userParam.getUserId());
-		//TODO redis에 데이터 추가
-//		User resultUser = User.builder().token(token).build();
+		final String token = jwtComponent.makeJwt(userId);
 
+		//redis에 데이터 추가
+		redisTemplate.opsForValue().set(userId, token, env.getProperty("jwt.expire", long.class), TimeUnit.MINUTES);
+
+//		User resultUser = User.builder().token(token).build();
 		User resultUser = new User();
 		resultUser.setToken(token);
 
-		System.out.println(resultUser);
+		log.info("user token info : {}", resultUser.getToken());
+
 		return resultUser;
 	}
 }
