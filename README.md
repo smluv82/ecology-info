@@ -35,7 +35,7 @@
  - /vo/ecology/validation : 각 API 별 필수 값 체크를 위한 validation interface
  - /vo/user : (1) Entity - User (2)Param(input) - UserParam
  
-4. api 명세
+5. api 명세
   - CSV 업로드 [POST]
     + url : http://localhost:8001/ecology/csv/add
       + params(key - value) : csvFile - csv file
@@ -108,7 +108,7 @@
                  , Content-Type - application/json
             
   
-5. 문제해결 전략
+6. 문제해결 전략
   - entity는 EcologyCode (지역 코드), EcologyProgram (프로그램 정보) 로 1:n으로 구성하였습니다.
   - 처음에는 단방향으로 EcologyProgram에서 ManyToOne으로 하였는데 API 개발 진행 중(지역명을 통한 조회 개발 시) 양방향으로 변경하였습니다.
   - lombok을 쓰다보니, 결과 조회에서 StackOverflowError가 발생하여,
@@ -129,6 +129,6 @@
                        테마, 프로그램소개, 프로그램상세소개의 각각 키워드를 카운트 및 가중치를 더하여 제일 높은 점수가 나오도록 개발하였습니다.
                        ex) (테마키워드카운트 * 테마가중치 + 소개카운트 * 소개가중치 + 상세소개카운트 * 상세소개가중치) / 가중치의 합
   
-6. 빌드 및 실행방법
+7. 빌드 및 실행방법
   - 빌드 : mvn clean install -Dmaven.test.skip=true
   - 실행 : java -jar ecology-info-1.0.jar
