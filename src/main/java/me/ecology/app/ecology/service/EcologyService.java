@@ -246,7 +246,6 @@ public class EcologyService {
 		});
 
 		List<EcologyResultDetail> detailList = countMap.entrySet().parallelStream()
-//				.sorted(Comparator.comparing(e -> e.getKey()))
 				.map(x -> new EcologyResultDetail(x.getKey(), x.getValue()))
 				.collect(Collectors.toList());
 
@@ -254,5 +253,32 @@ public class EcologyService {
 				.keyword(keyword)
 				.programs(detailList)
 				.build();
+	}
+
+	public EcologyResult searchForDetail(final String keyword) throws Exception {
+		log.info("searchForDetail service call");
+
+		List<EcologyProgram> ecologyProgramList = ecologyProgramService.findAll();
+
+		if(ecologyProgramList.isEmpty()) {
+			log.info("list is not exist");
+			return new EcologyResult(keyword, 0);
+		}
+
+		int count = 0;
+
+		for(EcologyProgram program : ecologyProgramList) {
+//			log.debug(program.getProgramDetail());
+			log.info("detail : {}", program.getProgramDetail());
+
+			int tmpCount = StringUtils.countMatches(program.getProgramDetail(), keyword);
+			log.info("tmpCount : {}", tmpCount);
+			count = count + tmpCount;
+		}
+
+		log.info("keyword count : {}", count);
+
+		return new EcologyResult(keyword, count);
+//		return EcologyResult.builder().keyword(keyword).count(1L).build();
 	}
 }

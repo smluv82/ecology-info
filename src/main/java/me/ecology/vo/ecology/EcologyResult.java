@@ -17,12 +17,18 @@ public class EcologyResult implements Serializable {
 	private static final long serialVersionUID = -3363776243060630836L;
 
 	private String keyword;
-	private Long count;
+	private Integer count;
 	private List<EcologyResultDetail> programs;
 
 	@Builder
 	public EcologyResult(String keyword, List<EcologyResultDetail> programs) {
 		this.keyword = keyword;
 		this.programs = programs;
+	}
+
+//	@Builder
+	public EcologyResult(String keyword, Integer count) {
+		this.keyword = keyword;
+		this.count = count;
 	}
 }

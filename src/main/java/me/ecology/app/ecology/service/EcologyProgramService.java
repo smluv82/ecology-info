@@ -57,4 +57,8 @@ public class EcologyProgramService {
 
 		return ecologyProgramRepository.findProgramInfoQueryByKeyword(keyword);
 	}
+
+	public List<EcologyProgram> findAll() throws Exception {
+		return ecologyProgramRepository.findAll();
+	}
 }

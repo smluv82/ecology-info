@@ -117,10 +117,9 @@ public class EcologyController {
 	}
 
 	@PostMapping("/ecology/detail/search")
-//	public ResponseEntity<EcologyResult> searchForDetail(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
-	public ResponseEntity<String> searchForDetail(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
+	public ResponseEntity<EcologyResult> searchForDetail(@RequestBody @Validated(EcologyKeywordValidation.class) final EcologyGroup ecologyGroup) throws Exception {
 		log.info("search program detail for keyword");
 
-		return ResponseEntity.ok("TODO");
+		return ResponseEntity.ok(ecologyService.searchForDetail(ecologyGroup.getKeyword()));
 	}
 }

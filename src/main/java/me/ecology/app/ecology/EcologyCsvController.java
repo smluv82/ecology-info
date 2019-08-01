@@ -30,6 +30,4 @@ public class EcologyCsvController {
 
 		return ResponseEntity.ok(ecologyService.saveCsv(CsvUtil.readAll(csvFile)));
 	}
-
-
 }
