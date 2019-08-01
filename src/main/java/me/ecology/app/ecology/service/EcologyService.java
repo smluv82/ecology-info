@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -99,6 +101,7 @@ public class EcologyService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public EcologyProgram create(final EcologyParam ecologyParam) throws Exception {
 		//TODO 나중에 에러코드 정의할것
 		if(ecologyProgramService.existsByProgramName(ecologyParam.getProgramName())) {
@@ -148,6 +151,7 @@ public class EcologyService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional(propagation=Propagation.REQUIRED)
 	public EcologyProgram update(final EcologyParam ecologyParam) throws Exception {
 		log.info("update ecologyParam[{}]", ecologyParam);
 		//TODO exception 변경 필요
@@ -272,6 +276,13 @@ public class EcologyService {
 //		return EcologyResult.builder().keyword(keyword).count(1L).build();
 	}
 
+	/**
+	 * 지역 및 키워드를 통한 프로그램 추천(가중치)
+	 *
+	 * @param ecologyParam
+	 * @return
+	 * @throws Exception
+	 */
 	public EcologyResult searchForWeight(final EcologyParam ecologyParam) throws Exception {
 		log.info("searchForWeight service call");
 
