@@ -1,4 +1,4 @@
-package me.ecology.test.jasypt;
+package me.ecology.test;
 
 import javax.annotation.Resource;
 
@@ -16,8 +16,6 @@ public class JasyptTest {
 
 	@Test
 	public void 암복호화_test() throws Exception {
-		System.out.println("testtest");
-
 		String encText = jasyptStringEncryptor.encrypt("test");
 		String plainText = jasyptStringEncryptor.decrypt(encText);
 
